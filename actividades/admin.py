@@ -1,3 +1,7 @@
 from django.contrib import admin
 
-# Register your models here.
+from actividades.models import Actividad, TipoActividad
+
+admin.site.register(TipoActividad)
+admin.site.register(Actividad)
+
