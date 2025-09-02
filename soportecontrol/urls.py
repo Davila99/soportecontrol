@@ -18,6 +18,10 @@ from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import RedirectView
 
+admin.site.site_header = "SIRELAB"
+admin.site.site_title = "SIRELAB - Admin"
+admin.site.index_title = "Bienvenido a SIRELAB"
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('registrolab.api.urls')),
