@@ -17,6 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic.base import RedirectView
+from django.contrib import admin
+
+admin.site.site_header = "SIRELAB"
+admin.site.site_title = "SIRELAB - Admin"
+admin.site.index_title = "Bienvenido a SIRELAB"
 
 admin.site.site_header = "SIRELAB"
 admin.site.site_title = "SIRELAB - Admin"
