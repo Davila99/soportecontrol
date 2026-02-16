@@ -1,5 +1,7 @@
 from rest_framework import serializers
-from .models import RegistroLab, Asignatura, Docente, Laboratorio, Carrera
+from registrolab.models import RegistroLab, Asignatura, Docente, Laboratorio, Carrera
+
+
 
 
 # -------- MODELOS RELACIONADOS --------
