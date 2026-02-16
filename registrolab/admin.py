@@ -1,49 +1,98 @@
 from django.contrib import admin
 from .models import RegistroLab, Laboratorio, Asignatura, Carrera, Docente
 
-# ------------------------------
-# Admin para RegistroLab
-# ------------------------------
+
+# ---------------------------------
+# LABORATORIO
+# ---------------------------------
+@admin.register(Laboratorio)
+class LaboratorioAdmin(admin.ModelAdmin):
+    list_display = ("id", "descripcion")
+    search_fields = ("descripcion",)
+    ordering = ("descripcion",)
+
+
+# ---------------------------------
+# ASIGNATURA
+# ---------------------------------
+@admin.register(Asignatura)
+class AsignaturaAdmin(admin.ModelAdmin):
+    list_display = ("id", "descripcion")
+    search_fields = ("descripcion",)
+    ordering = ("descripcion",)
+
+
+# ---------------------------------
+# CARRERA
+# ---------------------------------
+@admin.register(Carrera)
+class CarreraAdmin(admin.ModelAdmin):
+    list_display = ("id", "descripcion")
+    search_fields = ("descripcion",)
+    ordering = ("descripcion",)
+
+
+# ---------------------------------
+# DOCENTE
+# ---------------------------------
+@admin.register(Docente)
+class DocenteAdmin(admin.ModelAdmin):
+    list_display = ("id", "nombre")
+    search_fields = ("nombre",)
+    ordering = ("nombre",)
+
+
+# ---------------------------------
+# REGISTRO LAB (PRINCIPAL)
+# ---------------------------------
 @admin.register(RegistroLab)
 class RegistroLabAdmin(admin.ModelAdmin):
-    list_display = ("fecha", "asignatura_id", "docentes_id", "laboratorio_id", "carreras_id", "hora_inicio", "hora_fin")
+
+    # 🔹 Columnas visibles
+    list_display = (
+        "fecha",
+        "asignatura_id",
+        "docentes_id",
+        "laboratorio_id",
+        "carreras_id",
+        "hora_inicio",
+        "hora_fin",
+    )
+
+    # 🔎 BUSCADOR PRINCIPAL (arriba)
     search_fields = (
         "asignatura_id__descripcion",
         "docentes_id__nombre",
         "laboratorio_id__descripcion",
         "carreras_id__descripcion",
+        "fecha",
     )
-    list_filter = ("asignatura_id", "docentes_id", "laboratorio_id", "carreras_id", "fecha")
+
+    # 🔽 Filtros laterales
+    list_filter = (
+        "asignatura_id",
+        "docentes_id",
+        "laboratorio_id",
+        "carreras_id",
+        "fecha",
+    )
+
     date_hierarchy = "fecha"
 
-# ------------------------------
-# Admin para Laboratorio
-# ------------------------------
-@admin.register(Laboratorio)
-class LaboratorioAdmin(admin.ModelAdmin):
-    list_display = ("id", "descripcion")
-    search_fields = ("descripcion",)
+    ordering = ("-fecha", "hora_inicio")
+    list_per_page = 25
 
-# ------------------------------
-# Admin para Asignatura
-# ------------------------------
-@admin.register(Asignatura)
-class AsignaturaAdmin(admin.ModelAdmin):
-    list_display = ("id", "descripcion")
-    search_fields = ("descripcion",)
+    # 🚀 OPTIMIZACIÓN (como tu módulo Libro)
+    autocomplete_fields = (
+        "asignatura_id",
+        "docentes_id",
+        "laboratorio_id",
+        "carreras_id",
+    )
 
-# ------------------------------
-# Admin para Carrera
-# ------------------------------
-@admin.register(Carrera)
-class CarreraAdmin(admin.ModelAdmin):
-    list_display = ("id", "descripcion")
-    search_fields = ("descripcion",)
-
-# ------------------------------
-# Admin para Docente
-# ------------------------------
-@admin.register(Docente)
-class DocenteAdmin(admin.ModelAdmin):
-    list_display = ("id", "nombre")
-    search_fields = ("nombre",)
+    list_select_related = (
+        "asignatura_id",
+        "docentes_id",
+        "laboratorio_id",
+        "carreras_id",
+    )
