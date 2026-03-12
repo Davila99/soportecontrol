@@ -44,18 +44,31 @@ class RegistroLab(models.Model):
 
         if self.hora_inicio >= self.hora_fin:
             raise ValidationError(
-                "La hora de inicio debe ser menor que la hora de salida.")
+                "La hora de inicio debe ser menor que la hora de salida."
+            )
 
-        conflicto = RegistroLab.objects.filter(
+        conflicto_lab = RegistroLab.objects.filter(
             laboratorio_id=self.laboratorio_id,
             fecha=self.fecha,
             hora_inicio__lt=self.hora_fin,
             hora_fin__gt=self.hora_inicio
         ).exclude(id=self.id)
 
-        if conflicto.exists():
+        if conflicto_lab.exists():
             raise ValidationError(
                 "Este laboratorio ya está reservado en ese horario."
+            )
+
+        conflicto_docente = RegistroLab.objects.filter(
+            docentes_id=self.docentes_id,
+            fecha=self.fecha,
+            hora_inicio__lt=self.hora_fin,
+            hora_fin__gt=self.hora_inicio
+        ).exclude(id=self.id)
+
+        if conflicto_docente.exists():
+            raise ValidationError(
+                "Este docente ya tiene una reserva en ese horario"
             )
 
     def __str__(self):

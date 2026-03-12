@@ -45,6 +45,7 @@ class RegistroLabSerializer(serializers.ModelSerializer):
 
     def validate(self, data):
 
+        docentes_id = data.get('docentes_id')
         laboratorio = data.get('laboratorio_id')
         fecha = data.get('fecha')
         hora_inicio = data.get('hora_inicio')
@@ -56,18 +57,34 @@ class RegistroLabSerializer(serializers.ModelSerializer):
                 "La hora de inicio debe ser menor que la hora de salida."
             )
 
-        conflicto = RegistroLab.objects.filter(
+        # -------- VALIDAR DOCENTE --------
+        conflicto_docente = RegistroLab.objects.filter(
+            docentes_id=docentes_id,
+            fecha=fecha,
+            hora_inicio__lt=hora_fin,
+            hora_fin__gt=hora_inicio
+        )
+
+        if self.instance:
+            conflicto_docente = conflicto_docente.exclude(id=self.instance.id)
+
+        if conflicto_docente.exists():
+            raise serializers.ValidationError(
+                "Este docente ya tiene una reserva en ese horario."
+            )
+
+        # -------- VALIDAR LABORATORIO --------
+        conflicto_lab = RegistroLab.objects.filter(
             laboratorio_id=laboratorio,
             fecha=fecha,
             hora_inicio__lt=hora_fin,
             hora_fin__gt=hora_inicio
         )
 
-        # si estamos editando
         if self.instance:
-            conflicto = conflicto.exclude(id=self.instance.id)
+            conflicto_lab = conflicto_lab.exclude(id=self.instance.id)
 
-        if conflicto.exists():
+        if conflicto_lab.exists():
             raise serializers.ValidationError(
                 "Este laboratorio ya está reservado en ese horario."
             )
