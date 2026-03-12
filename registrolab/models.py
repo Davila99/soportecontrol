@@ -1,5 +1,5 @@
 from django.db import models
-
+from django.core.exceptions import ValidationError
 # Create your models here.
 
 
@@ -40,5 +40,27 @@ class RegistroLab(models.Model):
     hora_inicio = models.TimeField('Hora Entrada')
     hora_fin = models.TimeField('Hora Salida')
 
+    def clean(self):
+
+        if self.hora_inicio >= self.hora_fin:
+            raise ValidationError(
+                "La hora de inicio debe ser menor que la hora de salida.")
+
+        conflicto = RegistroLab.objects.filter(
+            laboratorio_id=self.laboratorio_id,
+            fecha=self.fecha,
+            hora_inicio__lt=self.hora_fin,
+            hora_fin__gt=self.hora_inicio
+        ).exclude(id=self.id)
+
+        if conflicto.exists():
+            raise ValidationError(
+                "Este laboratorio ya está reservado en ese horario."
+            )
+
     def __str__(self):
-        return self.fecha.strftime('%Y-%m-%d') + ' ' + self.hora_inicio.strftime('%H:%M') + ' - ' + self.hora_fin.strftime('%H:%M') + ' | ' + str(self.asignatura_id) + ' | ' + str(self.docentes_id) + ' | ' + str(self.laboratorio_id) + ' | ' + str(self.carreras_id)
+        return (
+            f"{self.fecha.strftime('%Y-%m-%d')} "
+            f"{self.hora_inicio.strftime('%H:%M')} - {self.hora_fin.strftime('%H:%M')} | "
+            f"{self.asignatura_id} | {self.docentes_id} | {self.laboratorio_id} | {self.carreras_id}"
+        )
