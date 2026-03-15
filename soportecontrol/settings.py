@@ -27,6 +27,8 @@ SECRET_KEY = os.getenv(
 )
 
 # SECURITY WARNING: don't run with debug turned on in production!
+
+
 def _get_env_bool(name: str, default: bool) -> bool:
     value = os.getenv(name)
     if value is None:
@@ -96,13 +98,12 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': os.getenv('DB_NAME', 'dbsirelab1'),
-        'USER': os.getenv('DB_USER', 'postgres'),
-        'PASSWORD': os.getenv('DB_PASSWORD', 'root'),
+        'USER': os.getenv('DB_USER', 'bryan'),
+        'PASSWORD': os.getenv('DB_PASSWORD', 'admin'),
         'HOST': os.getenv('DB_HOST', '127.0.0.1'),
         'PORT': os.getenv('DB_PORT', '5432'),
     }
 }
-
 
 
 # Password validation
@@ -151,4 +152,3 @@ CORS_ALLOWED_ORIGINS = [
     "https://crud-registrolab.vercel.app",
     "http://localhost:5173"
 ]
-    
